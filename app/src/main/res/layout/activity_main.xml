@@ -1,4 +1,38 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:id="@+id/container"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    tools:context=".MainActivity" tools:ignore="MergeRootFrame" />
+    tools:context=".MainActivity" tools:ignore="MergeRootFrame" >
+
+    <EditText
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText"
+        android:layout_gravity="left|top"
+        android:text="Unbelievable"
+        android:visibility="invisible" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="131dp"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/editText2"
+        android:layout_gravity="center"
+        android:text="I can lose my heart tonight"
+        android:textColor="#ffff3b36"
+        android:textStyle="bold"
+        android:textSize="28dp"
+        android:gravity="center"
+        android:editable="false"
+        android:enabled="false"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:layout_width="183dp"
+        android:layout_height="163dp"
+        android:id="@+id/imageView"
+        android:layout_gravity="right|top"
+        android:src="@mipmap/n7_wallpaper"
+        android:visibility="invisible" />
+
+</FrameLayout>
