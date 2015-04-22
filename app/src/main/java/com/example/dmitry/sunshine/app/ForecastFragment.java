@@ -16,8 +16,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,11 +34,14 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * A Forecast fragment containing a simple view.
  */
 public class ForecastFragment extends Fragment {
+
+    private ArrayAdapter<String> mForecastAdapter;
 
     public ForecastFragment() {
     }
@@ -61,7 +66,7 @@ public class ForecastFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
             FetchWeatherTask weatherTask = new FetchWeatherTask();
-            weatherTask.execute();
+            weatherTask.execute("94043");
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -79,12 +84,16 @@ public class ForecastFragment extends Fragment {
                 "Saturday - Sunny +15",
                 "Sunday - Sunny +16",
         };
-        ArrayList<String> Forecast = new ArrayList<String>(Arrays.asList(data));
-        ArrayAdapter<String> ForecastAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, Forecast);
+        List<String> Forecast = new ArrayList<String>(Arrays.asList(data));
+        mForecastAdapter = new ArrayAdapter<String>(
+                getActivity(),
+                R.layout.list_item_forecast,
+                R.id.list_item_forecast_textview,
+                Forecast
+        );
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        ListView List = (ListView) rootView.findViewById(R.id.listview_forecast);
-        List.setAdapter(ForecastAdapter);
-
+        ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
+        listView.setAdapter(mForecastAdapter);
 
         return rootView;
     }
@@ -185,7 +194,7 @@ public class ForecastFragment extends Fragment {
             }
 
             for (String s : resultStrs) {
-                Log.v(LOG_TAG, "Forecast entry: " + s);
+                Log.d(LOG_TAG, "Forecast entry: " + s);
             }
             return resultStrs;
 
@@ -225,7 +234,7 @@ public class ForecastFragment extends Fragment {
                             .build();
 
                 URL url = new URL(builtUri.toString());
-                Log.v(LOG_TAG, "Built URI " + builtUri.toString());
+                Log.d(LOG_TAG, "Built URI " + builtUri.toString());
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -254,6 +263,8 @@ public class ForecastFragment extends Fragment {
                     forecastJsonStr = null;
                 }
                 forecastJsonStr = buffer.toString();
+
+                Log.d(LOG_TAG, "Forecast string: " + forecastJsonStr);
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
                 // If the code didn't successfully get the weather data, there's no point in attempting
@@ -278,6 +289,16 @@ public class ForecastFragment extends Fragment {
                 }
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String[] result) {
+            if( result != null ){
+                mForecastAdapter.clear();
+                for(String dayForecastStr : result) {
+                    mForecastAdapter.add(dayForecastStr);
+                }
+            }
         }
     }
 }
