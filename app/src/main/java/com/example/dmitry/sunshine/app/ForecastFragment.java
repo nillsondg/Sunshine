@@ -95,6 +95,13 @@ public class ForecastFragment extends Fragment {
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                String forecast = mForecastAdapter.getItem(position);
+                Toast.makeText(getActivity(), forecast, Toast.LENGTH_SHORT).show();
+            }
+        });
         return rootView;
     }
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]>{
@@ -260,7 +267,7 @@ public class ForecastFragment extends Fragment {
 
                 if (buffer.length() == 0) {
                     // Stream was empty.  No point in parsing.
-                    forecastJsonStr = null;
+                    return null;
                 }
                 forecastJsonStr = buffer.toString();
 
@@ -269,7 +276,7 @@ public class ForecastFragment extends Fragment {
                 Log.e(LOG_TAG, "Error ", e);
                 // If the code didn't successfully get the weather data, there's no point in attempting
                 // to parse it.
-                forecastJsonStr = null;
+                return null;
             } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
