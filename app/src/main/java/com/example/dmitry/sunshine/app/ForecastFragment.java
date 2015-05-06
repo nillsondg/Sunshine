@@ -121,7 +121,7 @@ public class ForecastFragment extends Fragment {
         });
         return rootView;
     }
-    
+
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]>{
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
